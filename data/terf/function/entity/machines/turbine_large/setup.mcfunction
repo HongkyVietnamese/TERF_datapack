@@ -6,7 +6,7 @@ tag @s add datapipes_lib_power_generator
 tag @s add datapipes_lib_fluid_generator
 tag @s add fluid_filter_terf.high_pressure_steam
 tag @s add fluid_filter_water
-scoreboard players set @s datapipes_lib_power_max 166600
+scoreboard players set @s datapipes_lib_power_max 180000
 
 data modify entity @s data.terf.mainframe_logistics.config set value {input_coords:"^ ^2 ^",is_input:1,load:1}
 execute unless data entity @s data.fluids[{id:terf.high_pressure_steam}] run data modify entity @s data.fluids append value {max:5000,amount:0,id:"terf.high_pressure_steam",outpos:"^ ^2 ^1",checks:"if block ^ ^2 ^1 red_glazed_terracotta if block ^ ^2 ^-1 red_glazed_terracotta if block ^ ^-2 ^1 red_glazed_terracotta if block ^ ^-2 ^-1 red_glazed_terracotta if block ^2 ^ ^1 red_glazed_terracotta if block ^2 ^ ^-1 red_glazed_terracotta if block ^-2 ^ ^1 red_glazed_terracotta if block ^-2 ^ ^-1 red_glazed_terracotta"}
