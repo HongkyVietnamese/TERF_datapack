@@ -18,7 +18,7 @@ $data modify storage terf:temp args set value {dimension:'$(dimension)'}
 execute store result storage terf:temp args.x int 1 run scoreboard players operation x2 terf_states -= x terf_states
 execute store result storage terf:temp args.y int 1 run scoreboard players operation y2 terf_states -= y terf_states
 execute store result storage terf:temp args.z int 1 run scoreboard players operation z2 terf_states -= z terf_states
-$execute align xyz positioned ~-.001 ~-.001 ~-.001 as @e[dx=$(size_x),dy=$(size_y),dz=$(size_z),predicate=datapipes_lib:not_riding,tag=!terf_unwarpable] at @s run function terf:entity/machines/warp_core/states/warp/teleport with storage terf:temp args
+$execute align xyz as @e[dx=$(size_x),dy=$(size_y),dz=$(size_z),predicate=datapipes_lib:not_riding,tag=!terf_unwarpable] at @s run function terf:entity/machines/warp_core/states/warp/teleport with storage terf:temp args
 
 #Remove oxygen
 $fill ~ ~ ~ ~$(size_x) ~$(size_y) ~$(size_z) air replace void_air
@@ -27,7 +27,7 @@ $fill ~ ~ ~ ~$(size_x) ~$(size_y) ~$(size_z) air replace void_air
 $clone ~ ~ ~ ~$(size_x) ~$(size_y) ~$(size_z) to $(dimension) $(target_x) $(target_y) $(target_z) masked move
 
 #kill potentially duped items left behind by mojank's /clone
-$execute align xyz positioned ~-.001 ~-.001 ~-.001 as @e[type=!player,dx=$(size_x),dy=$(size_y),dz=$(size_z),tag=!terf_unwarpable] run kill @s
+$execute align xyz as @e[type=!player,dx=$(size_x),dy=$(size_y),dz=$(size_z),tag=!terf_unwarpable] run kill @s
 
 #run afterwarp functions
 $execute align xyz in $(dimension) positioned $(target_x) $(target_y) $(target_z) as @e[dx=$(size_x),dy=$(size_y),dz=$(size_z),tag=!terf_unwarpable] run function terf:entity/machines/warp_core/after_warp with entity @s data.terf

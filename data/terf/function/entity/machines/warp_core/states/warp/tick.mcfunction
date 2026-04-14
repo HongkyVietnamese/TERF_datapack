@@ -11,42 +11,62 @@ execute if score @s terf_data_E matches 410.. run tag @s remove terf_warp_fail
 execute if score @s terf_data_E matches 410.. run tag @s remove terf_indestructible
 execute if score @s terf_data_E matches 410.. run scoreboard players set @s terf_data_A 0
 
-execute if score @s terf_data_E matches 245 run function terf:entity/machines/warp_core/visuals/summon_cubes with storage terf:temp args
 execute if score @s terf_data_E matches 250 run function terf:entity/machines/warp_core/states/warp/warp
 
 $execute if score @s terf_data_E matches 350 run kill @e[type=minecraft:text_display,tag=terf_warp_core_vfx_cube,tag=terf_related_$(machine_id)]
 
 #####################################################################################################################################
 
+data modify storage terf:temp args2 set value {}
+
+scoreboard players operation x terf_states = @s terf_data_R
+scoreboard players operation z terf_states = @s terf_data_T
+scoreboard players operation x terf_states *= -2 terf_states
+scoreboard players operation z terf_states *= -2 terf_states
+scoreboard players operation x terf_states += @s terf_data_U
+scoreboard players operation z terf_states += @s terf_data_W
+
+execute store result storage terf:temp args2.center_x float 0.5 run scoreboard players get x terf_states
+execute store result storage terf:temp args2.center_z float 0.5 run scoreboard players get z terf_states
+
+execute store result storage terf:temp args2.neg_y int 1 run scoreboard players get @s terf_data_S
+
+scoreboard players operation y terf_states = @s terf_data_V
+scoreboard players operation y terf_states -= @s terf_data_S
+
+execute store result storage terf:temp args2.pos_y int 1 run scoreboard players get y terf_states
+
 scoreboard players operation x terf_states = @s terf_data_U
+scoreboard players operation y terf_states = @s terf_data_V
 scoreboard players operation z terf_states = @s terf_data_W
-scoreboard players operation x terf_states *= 2 terf_states
-scoreboard players operation z terf_states *= 2 terf_states
 scoreboard players add x terf_states 1
+scoreboard players add y terf_states 1
 scoreboard players add z terf_states 1
-execute store result storage terf:temp args2.Daxis_x int 1 run scoreboard players get x terf_states
-execute store result storage terf:temp args2.Daxis_z int 1 run scoreboard players get z terf_states
+execute store result storage terf:temp args2.size_x_add int 1 run scoreboard players get x terf_states
+execute store result storage terf:temp args2.size_z_add int 1 run scoreboard players get z terf_states
 $execute if score @s terf_data_E matches 40 as @e[type=text_display,tag=terf_related_$(machine_id)] run function terf:entity/machines/warp_core/visuals/transform_top_displays with storage terf:temp args2
 
 #####################################################################################################################################
-execute store result storage terf:temp args2.axis_x int 1 run scoreboard players get @s terf_data_U
-execute store result storage terf:temp args2.axis_z int 1 run scoreboard players get @s terf_data_W
 
-execute store result storage terf:temp args2.Haxis_y float 0.5 run scoreboard players get @s terf_data_V
+data modify storage terf:temp args2 set value {}
 
-scoreboard players operation y terf_states = @s terf_data_V
-scoreboard players operation y terf_states *= 2 terf_states
-scoreboard players add y terf_states 1
-execute store result storage terf:temp args2.Uaxis_y float 0.5 run scoreboard players get y terf_states
+scoreboard players operation neg_y terf_states = @s terf_data_S
+scoreboard players operation neg_y terf_states *= 2 terf_states
+scoreboard players remove neg_y terf_states 1
 
-scoreboard players operation x terf_states = @s terf_data_U
-scoreboard players operation z terf_states = @s terf_data_W
-scoreboard players operation x terf_states *= 2 terf_states
-scoreboard players operation z terf_states *= 2 terf_states
-scoreboard players add x terf_states 1
-scoreboard players add z terf_states 1
-execute store result storage terf:temp args2.Daxis_x int 1 run scoreboard players get x terf_states
-execute store result storage terf:temp args2.Daxis_z int 1 run scoreboard players get z terf_states
+scoreboard players operation pos_y terf_states = @s terf_data_V
+scoreboard players operation pos_y terf_states -= @s terf_data_S
+scoreboard players operation pos_y terf_states *= 2 terf_states
+scoreboard players remove pos_y terf_states 1
+
+execute store result storage terf:temp args2.Hneg_y float 0.25 run scoreboard players get neg_y terf_states
+execute store result storage terf:temp args2.Hpos_y float 0.25 run scoreboard players get pos_y terf_states
+
+scoreboard players add neg_y terf_states 2
+scoreboard players add pos_y terf_states 2
+
+execute store result storage terf:temp args2.Uneg_y float 0.5 run scoreboard players get neg_y terf_states
+execute store result storage terf:temp args2.Upos_y float 0.5 run scoreboard players get pos_y terf_states
 $execute if score @s terf_data_E matches 85 as @e[type=text_display,tag=terf_related_$(machine_id)] run function terf:entity/machines/warp_core/visuals/transform_side_displays with storage terf:temp args2
 
 #####################################################################################################################################
@@ -69,7 +89,7 @@ execute store result storage terf:temp args.size_x_add int 1 run scoreboard play
 execute store result storage terf:temp args.size_y_add int 1 run scoreboard players add y terf_states 1
 execute store result storage terf:temp args.size_z_add int 1 run scoreboard players add z terf_states 1
 
-execute if score @s terf_data_E matches 40.. run function terf:entity/machines/warp_core/warp/on_field_args with storage terf:temp args
+execute if score @s terf_data_E matches 40.. run function terf:entity/machines/warp_core/states/warp/on_field_args with storage terf:temp args
 
 #####################################################################################################################################
 
@@ -83,7 +103,6 @@ scoreboard players remove temp terf_states 40
 scoreboard players operation temp terf_states *= 10 terf_states
 execute if score temp terf_states matches 256.. run scoreboard players set temp terf_states 255
 
-scoreboard players operation R terf_states -= temp terf_states
 scoreboard players operation opacity terf_states -= temp terf_states
 execute unless score opacity terf_states matches 26.. run scoreboard players set opacity terf_states 26
 
@@ -94,7 +113,6 @@ execute if score temp terf_states matches ..-1 run scoreboard players set temp t
 scoreboard players operation temp terf_states *= 2 terf_states
 execute if score temp terf_states matches 230.. run scoreboard players set temp terf_states 230
 
-scoreboard players operation R terf_states += temp terf_states
 scoreboard players operation opacity terf_states += temp terf_states
 
 #decrease opacity and R after warping
@@ -103,7 +121,6 @@ scoreboard players remove temp terf_states 350
 execute if score temp terf_states matches ..-1 run scoreboard players set temp terf_states 0
 scoreboard players operation temp terf_states *= 4 terf_states
 
-scoreboard players operation R terf_states -= temp terf_states
 scoreboard players operation opacity terf_states -= temp terf_states
 
 #set all colors except red to 0 if warp fails
@@ -113,8 +130,9 @@ execute if entity @s[tag=terf_warp_fail] run scoreboard players set B terf_state
 execute if score @s terf_data_E matches 250 if entity @s[tag=terf_warp_fail] run function terf:entity/machines/warp_core/states/warp/warp_fail
 execute if score @s terf_data_E matches 250.. if entity @s[tag=terf_warp_fail] run function terf:require/lightning_random {max_splits:100,splitp:'datapipes_lib:chances/10',contp:'datapipes_lib:chances/10'}
 
-#convert color to RRGGBB in hex for displaying
-data modify storage terf:temp args set value {arg1:'data modify storage terf:temp temp set value \'#',arg5:'\''}
+execute unless score opacity terf_states matches ..255 run scoreboard players set opacity terf_states 255
+#convert color to RGB in hex for displaying
+data modify storage terf:temp args set value {arg1:'data modify storage terf:temp args.color set value "#',arg5:'"'}
 
 execute store result storage terf:temp args.r int 1 run scoreboard players get R terf_states
 execute store result storage terf:temp args.g int 1 run scoreboard players get G terf_states
@@ -122,11 +140,8 @@ execute store result storage terf:temp args.b int 1 run scoreboard players get B
 function terf:require/rgb_to_hex with storage terf:temp args
 
 function datapipes_lib:require/with_args/5 with storage terf:temp args
-scoreboard players operation height terf_states = @s terf_data_B
-scoreboard players operation temp terf_states = @s terf_data_E
+execute store result storage terf:temp args.opacity int 1 run scoreboard players get opacity terf_states
 
 #set color to text displays
-$execute unless score @s terf_data_E matches 64..120 as @e[type=text_display,tag=terf_related_$(machine_id)] run function terf:entity/machines/warp_core/visuals/as_text_displays
-
-#mass teleport the text displays after warping so they are visible
-$execute unless score @s terf_data_E matches 250.. as @e[type=text_display,tag=terf_related_$(machine_id)] at @s run tp @s ~ ~ ~
+$execute unless score @s terf_data_E matches 64..120 as @e[type=text_display,tag=terf_related_$(machine_id)] run function terf:entity/machines/warp_core/visuals/as_text_displays with storage terf:temp args
+$execute if score @s terf_data_E matches 121 as @e[type=text_display,tag=terf_related_$(machine_id)] run data modify entity @s interpolation_duration set value 0
